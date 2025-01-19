@@ -35,7 +35,7 @@ export default function createAzureIoHandler(
         format: modelJson.format,
         generatedBy: modelJson.generatedBy,
         convertedBy: modelJson.convertedBy,
-        weightData: weightsBuffer,
+        weightData: weightsBuffer.buffer,
         weightSpecs: modelJson.weightsManifest[0].weights,
       };
     },
