@@ -1,6 +1,6 @@
 # Tfjs azure IO handler
 
-`tfjs-azure-io-handler` provides a handler to save and load models from [TensorFlow.js](https://www.tensorflow.org/js)
+`tfjs-azure-io-handler` provides a handler to save and load models from [TensorFlow.js](https://www.tensorflow.org/js) to an [Azure storage account](https://learn.microsoft.com/en-us/azure/storage/common/storage-account-overview)
 
 ## Usage
 
@@ -63,5 +63,5 @@ const handler = createAzureIoHandler(
 
 const model = await tf.loadLayersModel(handler);
 
-// Saving is not permitted by Azure when using `AnonymousCredential`
+// 🚫 Saving is not permitted by Azure when using `AnonymousCredential`
 ```
