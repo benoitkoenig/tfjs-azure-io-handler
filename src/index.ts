@@ -17,10 +17,11 @@ export default function createIoHandler(name: string): io.IOHandler {
 
   return {
     load: async () => {
-      const modelJsonBuffer = await modelJsonBlobClient.downloadToBuffer();
-      const weightsBuffer = await weightsBlobClient.downloadToBuffer();
+      const modelJsonBuffer = (await modelJsonBlobClient.downloadToBuffer())
+        .buffer;
+      const weightsBuffer = (await weightsBlobClient.downloadToBuffer()).buffer;
 
-      const modelJson = JSON.parse(modelJsonBuffer.toString("utf8"));
+      const modelJson = JSON.parse(modelJsonBuffer.toString());
 
       return {
         modelTopology: modelJson.modelTopology,
