@@ -58,7 +58,7 @@ describe("createAzureIoHandler", () => {
     $savedAndLoadedModelPrediction.dispose();
 
     // Explicitely check that they are both equal to `[[22]]` instead of checking that they are equal to each other
-    // to ensure that the test does not pass on a flawed result, eg. if the test return an empty array
+    // to ensure that the test does not pass on a flawed result, eg. if the test returns an empty array
     expect(originalModelPrediction).toStrictEqual([[22]]);
     expect(savedAndLoadedModelPrediction).toStrictEqual([[22]]);
 
@@ -120,6 +120,21 @@ describe("createAzureIoHandler", () => {
           process.env["AZURE_STORAGE_ACCOUNT_KEY"]!,
         ),
       },
+    );
+  });
+
+  it("should throw when trying to save a model to azure using anonymous authentication", async () => {
+    await expect(
+      testIoHandler(
+        `createIoHandler-integration-test-anonymous-${new Date().toISOString()}`,
+        {
+          containerName: "tfjs-azure-io-handler-with-anonymous-access",
+          storageAccount: process.env["AZURE_STORAGE_ACCOUNT"]!,
+          credential: new AnonymousCredential(),
+        },
+      ),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `[Error: Cannot save model to azure using anonymous authentication]`,
     );
   });
 });
