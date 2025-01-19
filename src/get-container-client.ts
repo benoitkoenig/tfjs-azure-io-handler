@@ -1,3 +1,4 @@
+import type { TokenCredential } from "@azure/core-auth";
 import {
   type AnonymousCredential,
   BlobServiceClient,
@@ -16,10 +17,13 @@ interface BaseParams {
   storageAccount: string;
   /**
    * An access key to the storage account in which you want to store the files.
-   * `TokenCredential` probably also works but is not included in {@link credential}'s type definition (TODO).
    * Only one of {@link credential} or {@link storageSasToken} should be set.
    */
-  credential?: StorageSharedKeyCredential | AnonymousCredential | undefined;
+  credential?:
+    | StorageSharedKeyCredential
+    | AnonymousCredential
+    | TokenCredential
+    | undefined;
   /**
    * A SAS token to the container in which you want to store the files.
    * Only one of {@link credential} or {@link storageSasToken} should be set.
