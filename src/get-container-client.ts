@@ -68,37 +68,10 @@ export default function getContainerClient(params: ContainerClientParams) {
     storageSasToken,
   } = params;
 
-  if (isAnonymous) {
-    const blobServiceClient = new BlobServiceClient(
-      `https://${storageAccount}.blob.core.windows.net`,
-      new AnonymousCredential(),
-    );
-
-    const containerClient = blobServiceClient.getContainerClient(containerName);
-
-    return containerClient;
-  }
-
   if (!storageAccount || !containerName) {
     throw new Error(
       "Cannot connect to azure: `storageAccount` or `containerName` is not set",
     );
-  }
-
-  if (storageAccountKey) {
-    const sharedKeyCredential = new StorageSharedKeyCredential(
-      process.env["AZURE_STORAGE_ACCOUNT"]!,
-      process.env["AZURE_STORAGE_ACCOUNT_KEY"]!,
-    );
-
-    const blobServiceClient = new BlobServiceClient(
-      `https://${storageAccount}.blob.core.windows.net`,
-      sharedKeyCredential,
-    );
-
-    const containerClient = blobServiceClient.getContainerClient(containerName);
-
-    return containerClient;
   }
 
   if (storageSasToken) {
@@ -109,7 +82,24 @@ export default function getContainerClient(params: ContainerClientParams) {
     return containerClient;
   }
 
-  throw new Error(
-    "Cannot connect to azure: one of `storageAccountKey` or `storageSasToken` must be set",
+  const credential = isAnonymous
+    ? new AnonymousCredential()
+    : storageAccountKey
+      ? new StorageSharedKeyCredential(storageAccount, storageAccountKey)
+      : null;
+
+  if (!credential) {
+    throw new Error(
+      "Cannot connect to azure: one of `storageAccountKey` or `storageSasToken` must be set",
+    );
+  }
+
+  const blobServiceClient = new BlobServiceClient(
+    `https://${storageAccount}.blob.core.windows.net`,
+    credential,
   );
+
+  const containerClient = blobServiceClient.getContainerClient(containerName);
+
+  return containerClient;
 }
