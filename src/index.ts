@@ -2,6 +2,7 @@ import type { io } from "@tensorflow/tfjs-core";
 import getContainerClient, {
   type ContainerClientParams,
 } from "./get-container-client";
+import { AnonymousCredential } from "@azure/storage-blob";
 
 /**
  * Creates an {@link io.IOHandler} for `@tensorflow` to save and load models on an azure container
@@ -39,7 +40,10 @@ export default function createAzureIoHandler(
       };
     },
     save: async (modelArtifacts) => {
-      if (containerClientParams.isAnonymous) {
+      if (
+        containerClientParams.credential &&
+        containerClientParams.credential instanceof AnonymousCredential
+      ) {
         throw new Error(
           "Cannot save model to azure using anonymous authentication",
         );

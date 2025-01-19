@@ -1,8 +1,8 @@
 import {
-  AnonymousCredential,
+  type AnonymousCredential,
   BlobServiceClient,
   ContainerClient,
-  StorageSharedKeyCredential,
+  type StorageSharedKeyCredential,
 } from "@azure/storage-blob";
 
 interface BaseParams {
@@ -11,62 +11,39 @@ interface BaseParams {
    */
   containerName: string;
   /**
-   * If true, the handler does not authenticate to azure and uses anonymous credentials.
-   * In this case, the handler cannot write to azure and saving a model is not possible.
-   * For anonymous authentication to work, ensure that you enabled an anonymous access level (`Blob` or `Container`) on your container.
-   * Only one of {@link isAnonymous}, {@link storageAccountKey}, or {@link storageSasToken} should be set.
-   */
-  isAnonymous?: boolean | undefined;
-  /**
    * The name of the storage account in which you want to store the files.
    */
   storageAccount: string;
   /**
    * An access key to the storage account in which you want to store the files.
-   * Only one of {@link isAnonymous}, {@link storageAccountKey}, or {@link storageSasToken} should be set.
+   * `TokenCredential` probably also works but is not included in {@link credential}'s type definition (TODO).
+   * Only one of {@link credential} or {@link storageSasToken} should be set.
    */
-  storageAccountKey?: string | undefined;
+  credential?: StorageSharedKeyCredential | AnonymousCredential | undefined;
   /**
    * A SAS token to the container in which you want to store the files.
-   * Only one of {@link isAnonymous}, {@link storageAccountKey}, or {@link storageSasToken} should be set.
+   * Only one of {@link credential} or {@link storageSasToken} should be set.
    */
   storageSasToken?: string | undefined;
 }
 
 interface SasTokenParams extends BaseParams {
-  isAnonymous?: false | undefined;
-  storageAccountKey?: undefined;
+  credential?: undefined;
   storageSasToken: string;
 }
 
-interface AccountKeyParams extends BaseParams {
-  isAnonymous?: false | undefined;
-  storageAccountKey: string;
-  storageSasToken?: undefined;
-}
-
-interface AnonymousParams extends BaseParams {
-  isAnonymous: true;
-  storageAccountKey?: undefined;
+interface CredentialParams extends BaseParams {
+  credential: Exclude<BaseParams["credential"], undefined>;
   storageSasToken?: undefined;
 }
 
 /**
  * Parameters required to connect to an azure container
  */
-export type ContainerClientParams =
-  | SasTokenParams
-  | AccountKeyParams
-  | AnonymousParams;
+export type ContainerClientParams = SasTokenParams | CredentialParams;
 
 export default function getContainerClient(params: ContainerClientParams) {
-  const {
-    containerName,
-    isAnonymous,
-    storageAccount,
-    storageAccountKey,
-    storageSasToken,
-  } = params;
+  const { containerName, credential, storageAccount, storageSasToken } = params;
 
   if (!storageAccount || !containerName) {
     throw new Error(
@@ -82,24 +59,18 @@ export default function getContainerClient(params: ContainerClientParams) {
     return containerClient;
   }
 
-  const credential = isAnonymous
-    ? new AnonymousCredential()
-    : storageAccountKey
-      ? new StorageSharedKeyCredential(storageAccount, storageAccountKey)
-      : null;
-
-  if (!credential) {
-    throw new Error(
-      "Cannot connect to azure: one of `storageAccountKey` or `storageSasToken` must be set",
+  if (credential) {
+    const blobServiceClient = new BlobServiceClient(
+      `https://${storageAccount}.blob.core.windows.net`,
+      credential,
     );
+
+    const containerClient = blobServiceClient.getContainerClient(containerName);
+
+    return containerClient;
   }
 
-  const blobServiceClient = new BlobServiceClient(
-    `https://${storageAccount}.blob.core.windows.net`,
-    credential,
+  throw new Error(
+    "Cannot connect to azure: one of `storageAccountKey` or `credential` must be set",
   );
-
-  const containerClient = blobServiceClient.getContainerClient(containerName);
-
-  return containerClient;
 }

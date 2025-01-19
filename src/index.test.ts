@@ -2,6 +2,10 @@ import { describe, expect, it } from "vitest";
 import type { io } from "@tensorflow/tfjs-core";
 import * as tf from "@tensorflow/tfjs-node";
 import createIoHandler from "src";
+import {
+  AnonymousCredential,
+  StorageSharedKeyCredential,
+} from "@azure/storage-blob";
 
 describe("createAzureIoHandler", () => {
   async function testIoHandler(
@@ -63,7 +67,10 @@ describe("createAzureIoHandler", () => {
       {
         containerName: "tfjs-azure-io-handler",
         storageAccount: process.env["AZURE_STORAGE_ACCOUNT"]!,
-        storageAccountKey: process.env["AZURE_STORAGE_ACCOUNT_KEY"]!,
+        credential: new StorageSharedKeyCredential(
+          process.env["AZURE_STORAGE_ACCOUNT"]!,
+          process.env["AZURE_STORAGE_ACCOUNT_KEY"]!,
+        ),
       },
     );
 
@@ -88,14 +95,17 @@ describe("createAzureIoHandler", () => {
 
     const anonymousHandler = createIoHandler(name, {
       containerName: "tfjs-azure-io-handler-with-anonymous-access",
-      isAnonymous: true,
       storageAccount: process.env["AZURE_STORAGE_ACCOUNT"]!,
+      credential: new AnonymousCredential(),
     });
 
     const authentifiedHandler = createIoHandler(name, {
       containerName: "tfjs-azure-io-handler-with-anonymous-access",
       storageAccount: process.env["AZURE_STORAGE_ACCOUNT"]!,
-      storageAccountKey: process.env["AZURE_STORAGE_ACCOUNT_KEY"]!,
+      credential: new StorageSharedKeyCredential(
+        process.env["AZURE_STORAGE_ACCOUNT"]!,
+        process.env["AZURE_STORAGE_ACCOUNT_KEY"]!,
+      ),
     });
 
     await testIoHandler(anonymousHandler, authentifiedHandler);
