@@ -1,0 +1,46 @@
+{
+  "name": "tfjs-azure-io-handler",
+  "version": "0.0.0",
+  "description": "A package to save/load to/from azure when working with `@tensorflow/tfjs`",
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "rm -rf dist/ && rollup -c rollup.config.mjs",
+    "deploy": "npm run build && npm publish",
+    "lint": "eslint . --fix",
+    "test": "vitest run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/benoitkoenig/tfjs-azure-io-handler.git"
+  },
+  "keywords": [
+    "tfjs"
+  ],
+  "author": "Benoît Koenig",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/benoitkoenig/tfjs-azure-io-handler/issues"
+  },
+  "homepage": "https://github.com/benoitkoenig/tfjs-azure-io-handler#readme",
+  "peerDependencies": {
+    "@tensorflow/tfjs-core": "^4.0.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^12.1.1",
+    "@tensorflow/tfjs-core": "^4.22.0",
+    "@typescript-eslint/eslint-plugin": "^8.13.0",
+    "@typescript-eslint/parser": "^8.13.0",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "rollup": "^4.24.4",
+    "rollup-plugin-dts": "^6.1.1",
+    "tslib": "^2.8.1",
+    "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "@azure/storage-blob": "^12.26.0"
+  }
+}
