@@ -9,19 +9,18 @@ export default function createIoHandler(name: string): io.IOHandler {
   );
 
   const modelJsonBlobClient = containerClient.getBlobClient(
-    `modelweights/${name}/model.json`,
+    `${name}/model.json`,
   );
   const weightsBlobClient = containerClient.getBlobClient(
-    `modelweights/${name}/weights.bin`,
+    `${name}/weights.bin`,
   );
 
   return {
     load: async () => {
-      const modelJsonBuffer = (await modelJsonBlobClient.downloadToBuffer())
-        .buffer;
-      const weightsBuffer = (await weightsBlobClient.downloadToBuffer()).buffer;
+      const modelJsonBuffer = await modelJsonBlobClient.downloadToBuffer();
+      const weightsBuffer = await weightsBlobClient.downloadToBuffer();
 
-      const modelJson = JSON.parse(modelJsonBuffer.toString());
+      const modelJson = JSON.parse(modelJsonBuffer.toString("utf8"));
 
       return {
         modelTopology: modelJson.modelTopology,
@@ -54,12 +53,12 @@ export default function createIoHandler(name: string): io.IOHandler {
 
       await Promise.all([
         containerClient.uploadBlockBlob(
-          `modelweights/${name}/model.json`,
+          `${name}/model.json`,
           modelJsonBuffer,
           modelJsonBuffer.length,
         ),
         containerClient.uploadBlockBlob(
-          `modelweights/${name}/weights.bin`,
+          `${name}/weights.bin`,
           weightsBuffer,
           weightsBuffer.byteLength,
         ),
