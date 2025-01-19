@@ -4,7 +4,10 @@ import * as tf from "@tensorflow/tfjs-node";
 import createIoHandler from "src";
 
 describe("createAzureIoHandler", () => {
-  async function testIoHandler(handler: io.IOHandler) {
+  async function testIoHandler(
+    loadingHandler: io.IOHandler,
+    savingHandler = loadingHandler,
+  ) {
     const originalModel = tf.sequential({
       layers: [
         tf.layers.inputLayer({ inputShape: [6] }),
@@ -16,9 +19,9 @@ describe("createAzureIoHandler", () => {
       ],
     });
 
-    await originalModel.save(handler);
+    await originalModel.save(savingHandler);
 
-    const savedAndLoadedModel = await tf.loadLayersModel(handler);
+    const savedAndLoadedModel = await tf.loadLayersModel(loadingHandler);
 
     const { $originalModelPrediction, $savedAndLoadedModelPrediction } =
       tf.tidy(() => {
@@ -50,13 +53,15 @@ describe("createAzureIoHandler", () => {
 
     originalModel.dispose();
     savedAndLoadedModel.dispose();
+
     // TODO: delete the created file
   }
+
   it("should save and load a model from azure using the storageAccountKey", async () => {
     const handler = createIoHandler(
       `createIoHandler-integration-test-storageAccountKey-${new Date().toISOString()}`,
       {
-        containerName: process.env["AZURE_CONTAINER_NAME"]!,
+        containerName: "tfjs-azure-io-handler",
         storageAccount: process.env["AZURE_STORAGE_ACCOUNT"]!,
         storageAccountKey: process.env["AZURE_STORAGE_ACCOUNT_KEY"]!,
       },
@@ -69,12 +74,30 @@ describe("createAzureIoHandler", () => {
     const handler = createIoHandler(
       `createIoHandler-integration-test-storageSasToken-${new Date().toISOString()}`,
       {
-        containerName: process.env["AZURE_CONTAINER_NAME"]!,
+        containerName: "tfjs-azure-io-handler",
         storageAccount: process.env["AZURE_STORAGE_ACCOUNT"]!,
         storageSasToken: process.env["AZURE_STORAGE_SAS_TOKEN"]!,
       },
     );
 
     await testIoHandler(handler);
+  });
+
+  it("should load a model from azure using anonymous authentication", async () => {
+    const name = `createIoHandler-integration-test-anonymous-${new Date().toISOString()}`;
+
+    const anonymousHandler = createIoHandler(name, {
+      containerName: "tfjs-azure-io-handler-with-anonymous-access",
+      isAnonymous: true,
+      storageAccount: process.env["AZURE_STORAGE_ACCOUNT"]!,
+    });
+
+    const authentifiedHandler = createIoHandler(name, {
+      containerName: "tfjs-azure-io-handler-with-anonymous-access",
+      storageAccount: process.env["AZURE_STORAGE_ACCOUNT"]!,
+      storageAccountKey: process.env["AZURE_STORAGE_ACCOUNT_KEY"]!,
+    });
+
+    await testIoHandler(anonymousHandler, authentifiedHandler);
   });
 });

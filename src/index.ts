@@ -33,6 +33,12 @@ export default function createAzureIoHandler(
       };
     },
     save: async (modelArtifacts) => {
+      if (containerClientParams.isAnonymous) {
+        throw new Error(
+          "Cannot save model to azure using anonymous authentication",
+        );
+      }
+
       const modelJson = {
         modelTopology: modelArtifacts.modelTopology,
         weightsManifest: [

@@ -1,4 +1,5 @@
 import {
+  AnonymousCredential,
   BlobServiceClient,
   ContainerClient,
   StorageSharedKeyCredential,
@@ -6,6 +7,7 @@ import {
 
 interface SasTokenParams {
   containerName: string;
+  isAnonymous?: false;
   storageAccount: string;
   storageAccountKey?: undefined;
   storageSasToken: string;
@@ -13,16 +15,44 @@ interface SasTokenParams {
 
 interface AccountKeyParams {
   containerName: string;
+  isAnonymous?: false;
   storageAccount: string;
   storageAccountKey: string;
   storageSasToken?: undefined;
 }
 
-export type ContainerClientParams = SasTokenParams | AccountKeyParams;
+interface AnonymousParams {
+  containerName: string;
+  isAnonymous: true;
+  storageAccount: string;
+  storageAccountKey?: undefined;
+  storageSasToken?: undefined;
+}
+
+export type ContainerClientParams =
+  | SasTokenParams
+  | AccountKeyParams
+  | AnonymousParams;
 
 export default function getContainerClient(params: ContainerClientParams) {
-  const { containerName, storageAccount, storageAccountKey, storageSasToken } =
-    params;
+  const {
+    containerName,
+    isAnonymous,
+    storageAccount,
+    storageAccountKey,
+    storageSasToken,
+  } = params;
+
+  if (isAnonymous) {
+    const blobServiceClient = new BlobServiceClient(
+      `https://${storageAccount}.blob.core.windows.net`,
+      new AnonymousCredential(),
+    );
+
+    const containerClient = blobServiceClient.getContainerClient(containerName);
+
+    return containerClient;
+  }
 
   if (!storageAccount || !containerName) {
     throw new Error(
