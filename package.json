@@ -24,9 +24,6 @@
     "url": "https://github.com/benoitkoenig/tfjs-azure-io-handler/issues"
   },
   "homepage": "https://github.com/benoitkoenig/tfjs-azure-io-handler#readme",
-  "peerDependencies": {
-    "@tensorflow/tfjs-core": "^4.0.0"
-  },
   "devDependencies": {
     "@rollup/plugin-typescript": "^12.1.1",
     "@tensorflow/tfjs-core": "^4.22.0",
