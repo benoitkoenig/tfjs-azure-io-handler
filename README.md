@@ -1,24 +1,67 @@
 # Tfjs azure IO handler
 
-## Integration tests
+`tfjs-azure-io-handler` provides a handler to save and load models from [TensorFlow.js](https://www.tensorflow.org/js)
 
-Note (TODO): maybe this task can be done automatically using a tool such as terraform
+## Usage
 
-Running integration tests require a dedicated storage account on Azure. Here is how to proceed:
+### Using an Azure container SAS token:
 
-- Create a dedicated storage account.
-  - Add the storage account name to [.env.test](./.env.test)
-  - In `Settings` -> `Configuration`, enable `Allow Blob anonymous access`
-  - In `Security + networking`, copy one of the access keys and add it to [.env.test](./.env.test)
-- Create a first container named `tfjs-azure-io-handler`
-  - In `Settings` -> `Shared access tokens`, generate a SAS token and add it to [.env.test](./.env.test)
-- Create a second container named `tfjs-azure-io-handler-with-anonymous-access`
-  - In `Overview`, click on `Change access level` and set it to `Blob`
+```ts
+import createAzureIoHandler from "tfjs-azure-io-handler";
 
-[.env.test](./.env.test) should look like this:
+const handler = createAzureIoHandler(
+  "location/within/azure/container",
+  {
+    containerName: "<container name>",
+    storageAccount: "<storage account name>",
+    storageSasToken: "<storage account sas token>",
+  },
+);
 
+const model = await tf.loadLayersModel(handler);
+
+await model.save(handler);
 ```
-AZURE_STORAGE_SAS_TOKEN=[…]
-AZURE_STORAGE_ACCOUNT=[…]
-AZURE_STORAGE_ACCOUNT_KEY=[…]
+
+### Using an Azure storage access key:
+
+```ts
+import { StorageSharedKeyCredential } from "@azure/storage-blob";
+import createAzureIoHandler from "tfjs-azure-io-handler";
+
+const handler = createAzureIoHandler(
+  "location/within/azure/container",
+  {
+    containerName: "<container name>",
+    storageAccount: "<storage account name>",
+    credential: new StorageSharedKeyCredential(
+      "<storage account name>",
+      "<storage account key>"
+    ),
+  },
+);
+
+const model = await tf.loadLayersModel(handler);
+
+await model.save(handler);
+```
+
+### Using an anonymous connection:
+
+```ts
+import { AnonymousCredential } from "@azure/storage-blob";
+import createAzureIoHandler from "tfjs-azure-io-handler";
+
+const handler = createAzureIoHandler(
+  "location/within/azure/container",
+  {
+    containerName: "<container name>",
+    storageAccount: "<storage account name>",
+    credential: new AnonymousCredential(),
+  },
+);
+
+const model = await tf.loadLayersModel(handler);
+
+// Saving is not permitted by Azure when using `AnonymousCredential`
 ```
