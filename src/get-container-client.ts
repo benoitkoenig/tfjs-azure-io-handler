@@ -5,30 +5,55 @@ import {
   StorageSharedKeyCredential,
 } from "@azure/storage-blob";
 
-interface SasTokenParams {
+interface BaseParams {
+  /**
+   * The name of the container within the storage account in which you want to store the files.
+   */
   containerName: string;
-  isAnonymous?: false;
+  /**
+   * If true, the handler does not authenticate to azure and uses anonymous credentials.
+   * In this case, the handler cannot write to azure and saving a model is not possible.
+   * For anonymous authentication to work, ensure that you enabled an anonymous access level (`Blob` or `Container`) on your container.
+   * Only one of {@link isAnonymous}, {@link storageAccountKey}, or {@link storageSasToken} should be set.
+   */
+  isAnonymous?: boolean | undefined;
+  /**
+   * The name of the storage account in which you want to store the files.
+   */
   storageAccount: string;
+  /**
+   * An access key to the storage account in which you want to store the files.
+   * Only one of {@link isAnonymous}, {@link storageAccountKey}, or {@link storageSasToken} should be set.
+   */
+  storageAccountKey?: string | undefined;
+  /**
+   * A SAS token to the container in which you want to store the files.
+   * Only one of {@link isAnonymous}, {@link storageAccountKey}, or {@link storageSasToken} should be set.
+   */
+  storageSasToken?: string | undefined;
+}
+
+interface SasTokenParams extends BaseParams {
+  isAnonymous?: false | undefined;
   storageAccountKey?: undefined;
   storageSasToken: string;
 }
 
-interface AccountKeyParams {
-  containerName: string;
-  isAnonymous?: false;
-  storageAccount: string;
+interface AccountKeyParams extends BaseParams {
+  isAnonymous?: false | undefined;
   storageAccountKey: string;
   storageSasToken?: undefined;
 }
 
-interface AnonymousParams {
-  containerName: string;
+interface AnonymousParams extends BaseParams {
   isAnonymous: true;
-  storageAccount: string;
   storageAccountKey?: undefined;
   storageSasToken?: undefined;
 }
 
+/**
+ * Parameters required to connect to an azure container
+ */
 export type ContainerClientParams =
   | SasTokenParams
   | AccountKeyParams
