@@ -1,12 +1,13 @@
-import { ContainerClient } from "@azure/storage-blob";
-import { io } from "@tensorflow/tfjs-core";
+import type { io } from "@tensorflow/tfjs-core";
+import getContainerClient, {
+  type ContainerClientParams,
+} from "./get-container-client";
 
-// TODO memoize this handler per name
-export default function createIoHandler(name: string): io.IOHandler {
-  // TODO: memoize the containerClient once.
-  const containerClient = new ContainerClient(
-    `https://${process.env["AZURE_STORAGE_ACCOUNT"]!}.blob.core.windows.net/${process.env["AZURE_CONTAINER_NAME"]!}?${process.env["AZURE_STORAGE_SAS_TOKEN"]!}`,
-  );
+export default function createAzureIoHandler(
+  name: string,
+  containerClientParams: ContainerClientParams,
+): io.IOHandler {
+  const containerClient = getContainerClient(containerClientParams);
 
   const modelJsonBlobClient = containerClient.getBlobClient(
     `${name}/model.json`,

@@ -1,9 +1,10 @@
 import { describe, expect, it } from "vitest";
+import type { io } from "@tensorflow/tfjs-core";
 import * as tf from "@tensorflow/tfjs-node";
 import createIoHandler from "src";
 
-describe("createIoHandler", () => {
-  it("should save and load a model from azure", async () => {
+describe("createAzureIoHandler", () => {
+  async function testIoHandler(handler: io.IOHandler) {
     const originalModel = tf.sequential({
       layers: [
         tf.layers.inputLayer({ inputShape: [6] }),
@@ -14,10 +15,6 @@ describe("createIoHandler", () => {
         }),
       ],
     });
-
-    const handler = createIoHandler(
-      `createIoHandler-integration-test-${new Date().toISOString()}`,
-    );
 
     await originalModel.save(handler);
 
@@ -51,6 +48,33 @@ describe("createIoHandler", () => {
     expect(originalModelPrediction).toStrictEqual([[22]]);
     expect(savedAndLoadedModelPrediction).toStrictEqual([[22]]);
 
+    originalModel.dispose();
+    savedAndLoadedModel.dispose();
     // TODO: delete the created file
+  }
+  it("should save and load a model from azure using the storageAccountKey", async () => {
+    const handler = createIoHandler(
+      `createIoHandler-integration-test-storageAccountKey-${new Date().toISOString()}`,
+      {
+        containerName: process.env["AZURE_CONTAINER_NAME"]!,
+        storageAccount: process.env["AZURE_STORAGE_ACCOUNT"]!,
+        storageAccountKey: process.env["AZURE_STORAGE_ACCOUNT_KEY"]!,
+      },
+    );
+
+    await testIoHandler(handler);
+  });
+
+  it("should save and load a model from azure using the storageSasToken", async () => {
+    const handler = createIoHandler(
+      `createIoHandler-integration-test-storageSasToken-${new Date().toISOString()}`,
+      {
+        containerName: process.env["AZURE_CONTAINER_NAME"]!,
+        storageAccount: process.env["AZURE_STORAGE_ACCOUNT"]!,
+        storageSasToken: process.env["AZURE_STORAGE_SAS_TOKEN"]!,
+      },
+    );
+
+    await testIoHandler(handler);
   });
 });
