@@ -7,5 +7,6 @@
     "strict": true,
     "exactOptionalPropertyTypes": true,
     "noPropertyAccessFromIndexSignature": true,
+    "verbatimModuleSyntax": true,
   },
 }
