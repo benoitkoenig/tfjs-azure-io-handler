@@ -16,7 +16,7 @@
     "url": "git+https://github.com/benoitkoenig/tfjs-azure-io-handler.git"
   },
   "keywords": [
-    "tfjs",
+    "tensorflow",
     "azure"
   ],
   "author": "Benoît Koenig",
