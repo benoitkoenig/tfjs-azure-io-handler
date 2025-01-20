@@ -8,6 +8,15 @@ import type { ContainerClientParams } from "./get-container-client";
 import createAzureIoHandler from ".";
 import getContainerClient from "./get-container-client";
 
+// Environment variable names are picked to be consistent with https://learn.microsoft.com/en-us/azure/storage/blobs/authorize-data-operations-cli#set-environment-variables-for-authorization-parameters
+const AZURE_STORAGE_ACCOUNT = process.env["AZURE_STORAGE_ACCOUNT"];
+const AZURE_STORAGE_KEY = process.env["AZURE_STORAGE_KEY"];
+const AZURE_STORAGE_SAS_TOKEN = process.env["AZURE_STORAGE_SAS_TOKEN"];
+
+if (!AZURE_STORAGE_ACCOUNT || !AZURE_STORAGE_KEY || !AZURE_STORAGE_SAS_TOKEN) {
+  throw new Error("Environment variables missing in .env.test");
+}
+
 describe("createAzureIoHandler", () => {
   async function testIoHandler(
     path: string,
@@ -90,10 +99,10 @@ describe("createAzureIoHandler", () => {
       `createIoHandler-integration-test-storageAccountKey-${new Date().toISOString()}`,
       {
         containerName: "tfjs-azure-io-handler",
-        storageAccount: process.env["AZURE_STORAGE_ACCOUNT"]!,
+        storageAccount: AZURE_STORAGE_ACCOUNT,
         credential: new StorageSharedKeyCredential(
-          process.env["AZURE_STORAGE_ACCOUNT"]!,
-          process.env["AZURE_STORAGE_KEY"]!,
+          AZURE_STORAGE_ACCOUNT,
+          AZURE_STORAGE_KEY,
         ),
       },
     );
@@ -104,8 +113,8 @@ describe("createAzureIoHandler", () => {
       `createIoHandler-integration-test-storageSasToken-${new Date().toISOString()}`,
       {
         containerName: "tfjs-azure-io-handler",
-        storageAccount: process.env["AZURE_STORAGE_ACCOUNT"]!,
-        storageSasToken: process.env["AZURE_STORAGE_SAS_TOKEN"]!,
+        storageAccount: AZURE_STORAGE_ACCOUNT,
+        storageSasToken: AZURE_STORAGE_SAS_TOKEN,
       },
     );
   });
@@ -115,15 +124,15 @@ describe("createAzureIoHandler", () => {
       `createIoHandler-integration-test-anonymous-${new Date().toISOString()}`,
       {
         containerName: "tfjs-azure-io-handler-with-anonymous-access",
-        storageAccount: process.env["AZURE_STORAGE_ACCOUNT"]!,
+        storageAccount: AZURE_STORAGE_ACCOUNT,
         credential: new AnonymousCredential(),
       },
       {
         containerName: "tfjs-azure-io-handler-with-anonymous-access",
-        storageAccount: process.env["AZURE_STORAGE_ACCOUNT"]!,
+        storageAccount: AZURE_STORAGE_ACCOUNT,
         credential: new StorageSharedKeyCredential(
-          process.env["AZURE_STORAGE_ACCOUNT"]!,
-          process.env["AZURE_STORAGE_KEY"]!,
+          AZURE_STORAGE_ACCOUNT,
+          AZURE_STORAGE_KEY,
         ),
       },
     );
@@ -135,7 +144,7 @@ describe("createAzureIoHandler", () => {
         `createIoHandler-integration-test-saving-anonymous-${new Date().toISOString()}`,
         {
           containerName: "tfjs-azure-io-handler-with-anonymous-access",
-          storageAccount: process.env["AZURE_STORAGE_ACCOUNT"]!,
+          storageAccount: AZURE_STORAGE_ACCOUNT,
           credential: new AnonymousCredential(),
         },
       ),
