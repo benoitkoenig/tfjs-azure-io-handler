@@ -14,14 +14,14 @@ Running integration tests require a dedicated storage account on Azure. Here is 
   - In `Settings` -> `Configuration`, enable `Allow Blob anonymous access`
   - In `Security + networking`, copy one of the access keys and add it to [.env.test](./.env.test)
 - Create a first container named `tfjs-azure-io-handler`
-  - In `Settings` -> `Shared access tokens`, generate a SAS token and add it to [.env.test](./.env.test)
+  - In `Settings` -> `Shared access tokens`, generate a SAS token with permissions `Read`, `Create`, `Delete` and add it to [.env.test](./.env.test)
 - Create a second container named `tfjs-azure-io-handler-with-anonymous-access`
   - In `Overview`, click on `Change access level` and set it to `Blob`
 
 [.env.test](./.env.test) should look like this:
 
 ```
-AZURE_STORAGE_SAS_TOKEN=[…]
 AZURE_STORAGE_ACCOUNT=[…]
-AZURE_STORAGE_ACCOUNT_KEY=[…]
+AZURE_STORAGE_KEY=[…]
+AZURE_STORAGE_SAS_TOKEN=[…]
 ```
