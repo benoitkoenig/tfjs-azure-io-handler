@@ -1,7 +1,7 @@
 # Contributing to `tfjs-azure-io-handler`
 
 If `tfjs-azure-io-handler` fails to support your use-case, but should, feel free to [open an issue on Github](https://github.com/benoitkoenig/tfjs-azure-io-handler/issues).
-If you want to open a pull request yourself, please make sure that the `lint` and ideally `integration-tests` run. Because `integration-tests` require the extra work to setup, I will run them during my review anyway.
+If you want to open a pull request yourself, please make sure that the `lint` and ideally the `integration-tests` scripts still pass. Because `integration-tests` require the extra work to setup, feel free to - politely - ask a contributor to check the script for you during the review.
 
 ## Running integration tests
 
