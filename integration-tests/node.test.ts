@@ -17,7 +17,7 @@ if (!AZURE_STORAGE_ACCOUNT || !AZURE_STORAGE_KEY || !AZURE_STORAGE_SAS_TOKEN) {
 describe("createAzureIoHandler", () => {
   it("should save and load a model from azure using the storageAccountKey", async () => {
     await testIoHandler(
-      `createIoHandler-integration-test-storageAccountKey-${new Date().toISOString()}`,
+      `node-integration-test-storageAccountKey-${new Date().toISOString()}`,
       {
         containerName: "tfjs-azure-io-handler",
         storageAccount: AZURE_STORAGE_ACCOUNT,
@@ -31,7 +31,7 @@ describe("createAzureIoHandler", () => {
 
   it("should save and load a model from azure using the storageSasToken", async () => {
     await testIoHandler(
-      `createIoHandler-integration-test-storageSasToken-${new Date().toISOString()}`,
+      `node-integration-test-storageSasToken-${new Date().toISOString()}`,
       {
         containerName: "tfjs-azure-io-handler",
         storageAccount: AZURE_STORAGE_ACCOUNT,
@@ -42,7 +42,7 @@ describe("createAzureIoHandler", () => {
 
   it("should load a model from azure using anonymous authentication", async () => {
     await testIoHandler(
-      `createIoHandler-integration-test-anonymous-${new Date().toISOString()}`,
+      `node-integration-test-anonymous-${new Date().toISOString()}`,
       {
         containerName: "tfjs-azure-io-handler-with-anonymous-access",
         storageAccount: AZURE_STORAGE_ACCOUNT,
@@ -62,7 +62,7 @@ describe("createAzureIoHandler", () => {
   it("should throw when trying to save a model to azure using anonymous authentication", async () => {
     await expect(
       testIoHandler(
-        `createIoHandler-integration-test-saving-anonymous-${new Date().toISOString()}`,
+        `node-integration-test-saving-anonymous-${new Date().toISOString()}`,
         {
           containerName: "tfjs-azure-io-handler-with-anonymous-access",
           storageAccount: AZURE_STORAGE_ACCOUNT,
