@@ -1,9 +1,9 @@
-import * as tf from "@tensorflow/tfjs-node";
+import * as tf from "@tensorflow/tfjs";
 import { expect } from "vitest";
 
-import createAzureIoHandler from "src";
-import type { ContainerClientParams } from "src/get-container-client";
-import getContainerClient from "src/get-container-client";
+import createAzureIoHandler from "../src";
+import type { ContainerClientParams } from "../src/get-container-client";
+import getContainerClient from "../src/get-container-client";
 
 export default async function testIoHandler(
   path: string,

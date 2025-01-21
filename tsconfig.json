@@ -8,5 +8,6 @@
     "exactOptionalPropertyTypes": true,
     "noPropertyAccessFromIndexSignature": true,
     "verbatimModuleSyntax": true,
+    "types": ["vite/client"],
   },
 }
