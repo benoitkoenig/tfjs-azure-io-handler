@@ -5,13 +5,13 @@
   "main": "dist/index.node.cjs",
   "types": "dist/index.d.ts",
   "exports": {
-    "import": {
-      "node": "./dist/index.node.mjs",
-      "default": "./dist/index.browser.mjs"
+    "node": {
+      "import": "./dist/index.node.mjs",
+      "require": "./dist/index.node.cjs"
     },
-    "require": {
-      "node": "./dist/index.node.cjs",
-      "default": "./dist/index.browser.cjs"
+    "default": {
+      "import": "./dist/index.browser.mjs",
+      "require": "./dist/index.browser.cjs"
     }
   },
   "scripts": {
