@@ -12,6 +12,7 @@ Running integration tests requires a dedicated storage account on Azure. Here is
 - Create a dedicated storage account.
   - Add the storage account name to [.env.test](./.env.test)
   - In `Settings` -> `Configuration`, enable `Allow Blob anonymous access`
+  - In `Settings` -> `Resource sharing (CORS)` -> `Blob service`, add an entry with `Allowed origins`=`http://localhost:63315`, `Allowed headers`=`*`, `Exposed headers`=`*`, and select all `Allowed methods`
   - In `Security + networking`, copy one of the access keys and add it to [.env.test](./.env.test)
 - Create a first container named `tfjs-azure-io-handler`
   - In `Settings` -> `Shared access tokens`, generate a SAS token with permissions `Read`, `Create`, `Delete` and add it to [.env.test](./.env.test)
