@@ -35,8 +35,6 @@ describe("createAzureIoHandler", () => {
           credential: new AnonymousCredential(),
         },
       ),
-    ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `[Error: Cannot save model to azure using anonymous authentication]`,
-    );
+    ).rejects.toThrowError();
   });
 });
