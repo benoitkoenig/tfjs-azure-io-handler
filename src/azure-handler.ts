@@ -5,7 +5,7 @@ import { io } from "@tensorflow/tfjs-core";
  * This is virtually a copy/paste from tensorflow.js's io#getModelJsonForModelArtifacts, which is not exported.
  * TODO: investigate if there is a reason for it not to be exported?
  */
-export function getModelJsonForModelArtifacts(
+function getModelJsonForModelArtifacts(
   artifacts: io.ModelArtifacts,
   manifest: io.WeightsManifestConfig,
 ): io.ModelJSON {
@@ -83,20 +83,20 @@ export default class AzureHandler implements io.IOHandler {
   async save(modelArtifacts: io.ModelArtifacts): Promise<io.SaveResult> {
     const weightsBuffer = modelArtifacts.weightData!;
 
-    const modelJson = {
-      modelTopology: modelArtifacts.modelTopology,
-      weightsManifest: [
-        {
-          paths: Array.isArray(weightsBuffer)
-            ? weightsBuffer.map((_, i) => `weights-${i}.bin`)
-            : ["weights.bin"],
-          weights: modelArtifacts.weightSpecs,
-        },
-      ],
-      format: modelArtifacts.format,
-      generatedBy: modelArtifacts.generatedBy,
-      convertedBy: modelArtifacts.convertedBy,
-    };
+    if (!modelArtifacts.weightSpecs) {
+      throw new Error(
+        "Missing implementation in tfjs-azure-io-handler: `weightSpecs` is missing from `modelArtifacts`",
+      );
+    }
+
+    const modelJson = getModelJsonForModelArtifacts(modelArtifacts, [
+      {
+        paths: Array.isArray(weightsBuffer)
+          ? weightsBuffer.map((_, i) => `weights-${i}.bin`)
+          : ["weights.bin"],
+        weights: modelArtifacts.weightSpecs,
+      },
+    ]);
 
     const modelJsonBuffer = new TextEncoder().encode(JSON.stringify(modelJson));
 
