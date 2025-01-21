@@ -2,9 +2,18 @@
   "name": "tfjs-azure-io-handler",
   "version": "0.0.1",
   "description": "A package to save/load to/from azure when working with `@tensorflow/tfjs`",
-  "main": "dist/index.cjs",
-  "module": "dist/index.mjs",
+  "main": "dist/index.node.cjs",
   "types": "dist/index.d.ts",
+  "exports": {
+    "import": {
+      "node": "./dist/index.node.mjs",
+      "default": "./dist/index.browser.mjs"
+    },
+    "require": {
+      "node": "./dist/index.node.cjs",
+      "default": "./dist/index.browser.cjs"
+    }
+  },
   "scripts": {
     "build": "rm -rf dist/ && rollup -c rollup.config.mjs",
     "deploy": "npm run build && npm publish",

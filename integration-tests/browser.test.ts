@@ -1,5 +1,7 @@
-import { describe, expect, it } from "vitest";
 import { AnonymousCredential } from "@azure/storage-blob";
+import { describe, expect, it } from "vitest";
+
+import createAzureIoHandler from "../src/index.browser";
 import testIoHandler from "./test-io-handler";
 
 // Environment variable names are picked to be consistent with https://learn.microsoft.com/en-us/azure/storage/blobs/authorize-data-operations-cli#set-environment-variables-for-authorization-parameters
@@ -15,6 +17,7 @@ describe("createAzureIoHandler", () => {
   it("should save and load a model from azure using the storageSasToken", async () => {
     await testIoHandler(
       `browser-integration-test-storageSasToken-${new Date().toISOString()}`,
+      createAzureIoHandler,
       {
         containerName: "tfjs-azure-io-handler",
         storageAccount: AZURE_STORAGE_ACCOUNT,
@@ -29,6 +32,7 @@ describe("createAzureIoHandler", () => {
     await expect(
       testIoHandler(
         `browser-integration-test-saving-anonymous-${new Date().toISOString()}`,
+        createAzureIoHandler,
         {
           containerName: "tfjs-azure-io-handler-with-anonymous-access",
           storageAccount: AZURE_STORAGE_ACCOUNT,
