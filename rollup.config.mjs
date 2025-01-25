@@ -2,6 +2,11 @@ import alias from "@rollup/plugin-alias";
 import typescript from "@rollup/plugin-typescript";
 import { dts } from "rollup-plugin-dts";
 
+const baseConfig = {
+  input: "./src/index.ts",
+  external: ["@azure/storage-blob", "@tensorflow/tfjs-core"],
+};
+
 /** This plugin ensures that the browser build imports browser files */
 const browserAliasPlugin = alias({
   entries: [
@@ -12,41 +17,43 @@ const browserAliasPlugin = alias({
   ],
 });
 
+const typescriptPlugin = typescript();
+
 export default [
   {
-    input: "./src/index.ts",
+    ...baseConfig,
     output: {
       format: "cjs",
       file: "dist/index.node.cjs",
     },
-    plugins: [typescript()],
+    plugins: [typescriptPlugin],
   },
   {
-    input: "./src/index.ts",
+    ...baseConfig,
     output: {
       format: "es",
       file: "dist/index.node.mjs",
     },
-    plugins: [typescript()],
+    plugins: [typescriptPlugin],
   },
   {
-    input: "./src/index.ts",
+    ...baseConfig,
     output: {
       format: "cjs",
       file: "dist/index.browser.cjs",
     },
-    plugins: [browserAliasPlugin, typescript()],
+    plugins: [browserAliasPlugin, typescriptPlugin],
   },
   {
-    input: "./src/index.ts",
+    ...baseConfig,
     output: {
       format: "es",
       file: "dist/index.browser.mjs",
     },
-    plugins: [browserAliasPlugin, typescript()],
+    plugins: [browserAliasPlugin, typescriptPlugin],
   },
   {
-    input: "./src/index.ts",
+    ...baseConfig,
     output: {
       file: "dist/index.d.ts",
     },
