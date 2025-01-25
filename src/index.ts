@@ -1,6 +1,6 @@
 import type { io } from "@tensorflow/tfjs-core";
 
-import AzureHandler from "./azure-handler.browser";
+import AzureHandler from "./azure-handler";
 import getContainerClient, {
   type ContainerClientParams,
 } from "./get-container-client";

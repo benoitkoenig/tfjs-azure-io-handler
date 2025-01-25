@@ -1,7 +1,7 @@
 import { AnonymousCredential } from "@azure/storage-blob";
 import { describe, expect, it } from "vitest";
 
-import createAzureIoHandler from "../src/index.browser";
+import createAzureIoHandler from "../src";
 
 import testIoHandler from "./test-io-handler";
 

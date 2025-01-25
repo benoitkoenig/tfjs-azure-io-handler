@@ -4,7 +4,7 @@ import {
 } from "@azure/storage-blob";
 import { describe, expect, it } from "vitest";
 
-import createAzureIoHandler from "../src/index.node";
+import createAzureIoHandler from "../src";
 
 import testIoHandler from "./test-io-handler";
 

@@ -36,6 +36,7 @@
   "homepage": "https://github.com/benoitkoenig/tfjs-azure-io-handler#readme",
   "devDependencies": {
     "@azure/core-auth": "^1.9.0",
+    "@rollup/plugin-alias": "^5.1.1",
     "@rollup/plugin-typescript": "^12.1.1",
     "@tensorflow/tfjs": "^4.22.0",
     "@tensorflow/tfjs-core": "^4.22.0",

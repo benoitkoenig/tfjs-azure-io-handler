@@ -1,6 +1,7 @@
 import type { ContainerClient } from "@azure/storage-blob";
 import { io } from "@tensorflow/tfjs-core";
 
+import { downloadAsBuffer, downloadAsText } from "./azure-buffer.utils.node";
 import getModelJsonForModelArtifacts from "./get-model-json-for-model-artifacts";
 
 export default class AzureHandler implements io.IOHandler {
@@ -15,7 +16,7 @@ export default class AzureHandler implements io.IOHandler {
     );
 
     const modelJson: io.ModelJSON = JSON.parse(
-      (await modelJsonBlobClient.downloadToBuffer()).toString("utf-8"),
+      await downloadAsText(modelJsonBlobClient),
     );
 
     const weightsManifest = modelJson.weightsManifest;
@@ -28,7 +29,7 @@ export default class AzureHandler implements io.IOHandler {
         .map((subPath) =>
           this.containerClient.getBlobClient(`${this.path}/${subPath}`),
         )
-        .map(async (blobClient) => await blobClient.downloadToBuffer()),
+        .map(async (blobClient) => downloadAsBuffer(blobClient)),
     );
 
     return io.getModelArtifactsForJSONSync(modelJson, weightSpecs, weightsData);
