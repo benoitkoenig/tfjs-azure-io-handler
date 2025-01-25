@@ -4,8 +4,6 @@ import {
 } from "@azure/storage-blob";
 import { describe, expect, it } from "vitest";
 
-import createAzureIoHandler from "../src";
-
 import testIoHandler from "./test-io-handler";
 
 // Environment variable names are picked to be consistent with https://learn.microsoft.com/en-us/azure/storage/blobs/authorize-data-operations-cli#set-environment-variables-for-authorization-parameters
@@ -21,7 +19,6 @@ describe("createAzureIoHandler", () => {
   it("should save and load a model from azure using the storageAccountKey", async () => {
     await testIoHandler(
       `node-integration-test-storageAccountKey-${new Date().toISOString()}`,
-      createAzureIoHandler,
       {
         containerName: "tfjs-azure-io-handler",
         storageAccount: AZURE_STORAGE_ACCOUNT,
@@ -36,7 +33,6 @@ describe("createAzureIoHandler", () => {
   it("should save and load a model from azure using the storageSasToken", async () => {
     await testIoHandler(
       `node-integration-test-storageSasToken-${new Date().toISOString()}`,
-      createAzureIoHandler,
       {
         containerName: "tfjs-azure-io-handler",
         storageAccount: AZURE_STORAGE_ACCOUNT,
@@ -48,7 +44,6 @@ describe("createAzureIoHandler", () => {
   it("should load a model from azure using anonymous authentication", async () => {
     await testIoHandler(
       `node-integration-test-anonymous-${new Date().toISOString()}`,
-      createAzureIoHandler,
       {
         containerName: "tfjs-azure-io-handler-with-anonymous-access",
         storageAccount: AZURE_STORAGE_ACCOUNT,
@@ -69,7 +64,6 @@ describe("createAzureIoHandler", () => {
     await expect(
       testIoHandler(
         `node-integration-test-saving-anonymous-${new Date().toISOString()}`,
-        createAzureIoHandler,
         {
           containerName: "tfjs-azure-io-handler-with-anonymous-access",
           storageAccount: AZURE_STORAGE_ACCOUNT,
