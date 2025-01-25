@@ -1,6 +1,6 @@
 {
   "name": "tfjs-azure-io-handler",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A package to save/load to/from azure when working with `@tensorflow/tfjs`",
   "main": "dist/index.node.cjs",
   "types": "dist/index.d.ts",
