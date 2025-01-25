@@ -19,5 +19,10 @@ export default defineWorkspace([
         instances: [{ browser: "chromium" }],
       },
     },
+    resolve: {
+      alias: {
+        "./azure-buffer.utils.node": "./azure-buffer.utils.browser",
+      },
+    },
   },
 ]);

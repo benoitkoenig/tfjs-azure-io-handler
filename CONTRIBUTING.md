@@ -3,10 +3,6 @@
 If `tfjs-azure-io-handler` fails to support your use-case, but should, feel free to [open an issue on Github](https://github.com/benoitkoenig/tfjs-azure-io-handler/issues).
 If you want to open a pull request yourself, please make sure that the `lint` and ideally the `integration-tests` scripts still pass. Because `integration-tests` require the extra work to setup, feel free to - politely - ask a contributor to check the script for you during the review.
 
-## TODO
-
-- There is __a lot__ of code replication between browser and node, but the issue ultimately is only due to buffers. See how you can tackle this issue
-
 ## Testing
 
 Due to the way `tfjs-azure-io-handler` works and its size, it currently has __no unit tests at all__. All testing is done via __integration tests__, which will actually upload/download to/from azure.
