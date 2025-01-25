@@ -1,5 +1,6 @@
 import type { ContainerClient } from "@azure/storage-blob";
 import { io } from "@tensorflow/tfjs-core";
+
 import getModelJsonForModelArtifacts from "./get-model-json-for-model-artifacts";
 
 export default class AzureHandler implements io.IOHandler {

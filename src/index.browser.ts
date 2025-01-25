@@ -1,9 +1,9 @@
 import type { io } from "@tensorflow/tfjs-core";
 
+import AzureHandler from "./azure-handler.browser";
 import getContainerClient, {
   type ContainerClientParams,
 } from "./get-container-client";
-import AzureHandler from "./azure-handler.browser";
 
 /**
  * Creates an {@link io.IOHandler} for `@tensorflow` to save and load models on an azure container

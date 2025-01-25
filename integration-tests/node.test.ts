@@ -5,6 +5,7 @@ import {
 import { describe, expect, it } from "vitest";
 
 import createAzureIoHandler from "../src/index.node";
+
 import testIoHandler from "./test-io-handler";
 
 // Environment variable names are picked to be consistent with https://learn.microsoft.com/en-us/azure/storage/blobs/authorize-data-operations-cli#set-environment-variables-for-authorization-parameters

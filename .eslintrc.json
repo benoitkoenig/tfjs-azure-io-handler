@@ -5,7 +5,8 @@
   },
   "extends": [
     "eslint:recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/recommended"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -14,7 +15,8 @@
   },
   "plugins": [
     "@typescript-eslint",
-    "prettier"
+    "prettier",
+    "import"
   ],
   "ignorePatterns": ["**/dist"],
   "rules": {
@@ -24,6 +26,20 @@
       "ignoreRestSiblings": true
     }],
     "no-constant-condition": ["error", { "checkLoops": false }],
+    "import/order": ["error", {
+        "alphabetize": { "order": "asc" },
+        "groups": ["builtin", "external", "internal", "parent", "sibling"],
+        "newlines-between": "always",
+          "pathGroupsExcludedImportTypes": []
+    }],
     "prettier/prettier": "error"
+  },
+  "settings": {
+      "import/resolver": {
+          "typescript": {
+              "alwaysTryTypes": true,
+              "project": "*/tsconfig.json"
+          }
+      }
   }
 }
