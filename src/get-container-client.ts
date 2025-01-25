@@ -42,7 +42,7 @@ interface CredentialParams extends BaseParams {
 }
 
 /**
- * Parameters required to connect to an azure container
+ * Parameters required to connect to an Azure Storage container allowing you to manipulate its blobs.
  */
 export type ContainerClientParams = SasTokenParams | CredentialParams;
 
