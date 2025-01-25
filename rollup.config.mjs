@@ -2,6 +2,16 @@ import alias from "@rollup/plugin-alias";
 import typescript from "@rollup/plugin-typescript";
 import { dts } from "rollup-plugin-dts";
 
+/** This plugin ensures that the browser build imports browser files */
+const browserAliasPlugin = alias({
+  entries: [
+    {
+      find: "./azure-buffer.utils.node",
+      replacement: "./azure-buffer.utils.browser",
+    },
+  ],
+});
+
 export default [
   {
     input: "./src/index.ts",
@@ -25,17 +35,7 @@ export default [
       format: "cjs",
       file: "dist/index.browser.cjs",
     },
-    plugins: [
-      alias({
-        entries: [
-          {
-            find: "./azure-buffer.utils.node",
-            replacement: "./azure-buffer.utils.browser",
-          },
-        ],
-      }),
-      typescript(),
-    ],
+    plugins: [browserAliasPlugin, typescript()],
   },
   {
     input: "./src/index.ts",
@@ -43,17 +43,7 @@ export default [
       format: "es",
       file: "dist/index.browser.mjs",
     },
-    plugins: [
-      alias({
-        entries: [
-          {
-            find: "./azure-buffer.utils.node",
-            replacement: "./azure-buffer.utils.browser",
-          },
-        ],
-      }),
-      typescript(),
-    ],
+    plugins: [browserAliasPlugin, typescript()],
   },
   {
     input: "./src/index.ts",
