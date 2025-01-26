@@ -1,6 +1,7 @@
 import type { ContainerClient } from "@azure/storage-blob";
 import { io } from "@tensorflow/tfjs-core";
 
+// rollup will replace azure-buffer.utils.node by azure-buffer.utils.browser in the browser build
 import { downloadAsBuffer, downloadAsText } from "./azure-buffer.utils.node";
 import getModelJsonForModelArtifacts from "./get-model-json-for-model-artifacts";
 
