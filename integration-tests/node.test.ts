@@ -45,12 +45,12 @@ describe("createAzureIoHandler", () => {
     await testIoHandler(
       `node-integration-test-anonymous-${new Date().toISOString()}`,
       {
-        containerName: "tfjs-azure-io-handler-with-anonymous-access",
+        containerName: "tfjs-azure-io-handler",
         storageAccount: AZURE_STORAGE_ACCOUNT,
         credential: new AnonymousCredential(),
       },
       {
-        containerName: "tfjs-azure-io-handler-with-anonymous-access",
+        containerName: "tfjs-azure-io-handler",
         storageAccount: AZURE_STORAGE_ACCOUNT,
         credential: new StorageSharedKeyCredential(
           AZURE_STORAGE_ACCOUNT,
@@ -65,7 +65,7 @@ describe("createAzureIoHandler", () => {
       testIoHandler(
         `node-integration-test-saving-anonymous-${new Date().toISOString()}`,
         {
-          containerName: "tfjs-azure-io-handler-with-anonymous-access",
+          containerName: "tfjs-azure-io-handler",
           storageAccount: AZURE_STORAGE_ACCOUNT,
           credential: new AnonymousCredential(),
         },

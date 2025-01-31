@@ -7,22 +7,37 @@ If you want to open a pull request yourself, please make sure that the `lint` an
 
 Due to the way `tfjs-azure-io-handler` works and its size, it currently has __no unit tests at all__. All testing is done via __integration tests__, which will actually upload/download to/from azure.
 
-Running integration tests requires a dedicated storage account on Azure. Here is how to proceed:
+Running integration tests requires a dedicated storage account on Azure.
 
-- Create a dedicated storage account.
-  - Add the storage account name to [.env.test](./.env.test)
-  - In `Settings` -> `Configuration`, enable `Allow Blob anonymous access`
-  - In `Settings` -> `Resource sharing (CORS)` -> `Blob service`, add an entry with `Allowed origins`=`http://localhost:63315`, `Allowed headers`=`*`, `Exposed headers`=`*`, and select all `Allowed methods`
-  - In `Security + networking`, copy one of the access keys and add it to [.env.test](./.env.test)
-- Create a first container named `tfjs-azure-io-handler`
-  - In `Settings` -> `Shared access tokens`, generate a SAS token with permissions `Read`, `Create`, `Delete` and add it to [.env.test](./.env.test)
-- Create a second container named `tfjs-azure-io-handler-with-anonymous-access`
-  - In `Overview`, click on `Change access level` and set it to `Blob`
+### Set up the integration-tests environment
 
-[.env.test](./.env.test) should look like this:
+#### Create the resources
+
+- On the [Azure Portal](https://portal.azure.com/#home), create or pick an existing __subscription__ to host the integration-tests resources
+- Install [terraform](https://www.terraform.io/) locally
+- Run `terraform apply` and provide your subscription's id
+
+#### Generate a SAS token
+
+> TODO: Check if there is a way to include this step within `Terraform`
+
+> ℹ️ The resources in this step have been created by Terraform in the previous step
+
+- Navigate to the `tfjsazureiohandler` Storage Account
+- Go to `Data storage` -> `Containers` and select the container named `tfjs-azure-io-handler`
+- Go to `Settings` -> `Shared access tokens`
+- Generate a SAS token
+  - Set `Signing method` to `Account key`
+  - Set `Permissions` to `Read`, `Create`, `Delete`
+  - Set `Expiry` to a value that suits you
+  - Remember to copy the generated __SAS token__, you will need to add it in your [.env.test](./.env.test)
+
+#### Create [.env.test](./.env.test)
+
+Populate your [.env.test](./.env.test) like this:
 
 ```
-AZURE_STORAGE_ACCOUNT=[…]
-AZURE_STORAGE_KEY=[…]
-AZURE_STORAGE_SAS_TOKEN=[…]
+AZURE_STORAGE_ACCOUNT=[Output by terraform under the name `storage_account_name`]
+AZURE_STORAGE_KEY=[Output by terraform under the name `primary_access_key`]
+AZURE_STORAGE_SAS_TOKEN=[Copied during the `Generate a SAS token step`]
 ```

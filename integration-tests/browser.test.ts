@@ -31,7 +31,7 @@ describe("createAzureIoHandler", () => {
       testIoHandler(
         `browser-integration-test-saving-anonymous-${new Date().toISOString()}`,
         {
-          containerName: "tfjs-azure-io-handler-with-anonymous-access",
+          containerName: "tfjs-azure-io-handler",
           storageAccount: AZURE_STORAGE_ACCOUNT,
           credential: new AnonymousCredential(),
         },
