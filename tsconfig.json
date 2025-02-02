@@ -4,6 +4,8 @@
     "module": "esnext",
     "baseUrl": ".",
     "outDir": "dist",
+    "noEmit": true, // building is done by rollup
+    "skipLibCheck": true, // necessary because of https://stackoverflow.com/questions/70128917/cannot-find-name-long
     "strict": true,
     "exactOptionalPropertyTypes": true,
     "noPropertyAccessFromIndexSignature": true,
