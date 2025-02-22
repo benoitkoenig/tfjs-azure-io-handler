@@ -2,9 +2,8 @@
   "name": "tfjs-azure-io-handler",
   "version": "0.0.5",
   "description": "A package to save/load to/from azure when working with `@tensorflow/tfjs`",
-  "main": "dist/index.node.cjs",
-  "types": "dist/index.d.ts",
   "exports": {
+    "types": "./dist/index.d.ts",
     "node": {
       "import": "./dist/index.node.mjs",
       "require": "./dist/index.node.cjs"
@@ -67,6 +66,10 @@
     "@tensorflow/tfjs-core": "^4.0.0"
   },
   "dependencies": {
-    "@azure/storage-blob": "^12.26.0"
+    "@azure/storage-blob": "^12.26.0",
+    "tfjs-azure-io-handler": "link:../snap/code/184/.local/share/pnpm/global/5/node_modules/tfjs-azure-io-handler"
+  },
+  "pnpm": {
+    "overrides": {}
   }
 }
