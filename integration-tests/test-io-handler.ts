@@ -32,19 +32,16 @@ export default async function testIoHandler(
   try {
     const savedAndLoadedModel = await tf.loadLayersModel(loadingHandler);
 
-    const { $originalModelPrediction, $savedAndLoadedModelPrediction } =
-      tf.tidy(() => {
-        const $mockInput = tf.tensor([[1, 2, 3, 4, 5, 6]]);
+    const $mockInput = tf.tensor([[1, 2, 3, 4, 5, 6]]);
 
-        return {
-          $originalModelPrediction: originalModel.predict(
-            $mockInput,
-          ) as tf.Tensor2D,
-          $savedAndLoadedModelPrediction: savedAndLoadedModel.predict(
-            $mockInput,
-          ) as tf.Tensor2D,
-        };
-      });
+    const { $originalModelPrediction, $savedAndLoadedModelPrediction } = {
+      $originalModelPrediction: originalModel.predict(
+        $mockInput,
+      ) as tf.Tensor2D,
+      $savedAndLoadedModelPrediction: savedAndLoadedModel.predict(
+        $mockInput,
+      ) as tf.Tensor2D,
+    };
 
     const [originalModelPrediction, savedAndLoadedModelPrediction] =
       await Promise.all([
@@ -52,6 +49,7 @@ export default async function testIoHandler(
         $savedAndLoadedModelPrediction.array(),
       ]);
 
+    $mockInput.dispose();
     $originalModelPrediction.dispose();
     $savedAndLoadedModelPrediction.dispose();
 
@@ -62,6 +60,8 @@ export default async function testIoHandler(
 
     originalModel.dispose();
     savedAndLoadedModel.dispose();
+
+    expect(tf.memory().numBytes).toBe(0);
   } finally {
     /**
      * Failing to dispose the models in case an error is acceptable within integration tests,
